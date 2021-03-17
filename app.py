@@ -5,8 +5,6 @@ import forms
 from datetime import datetime
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-print(basedir)
-
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'dfgsfdgsdfgsdfgsdf'
@@ -40,6 +38,7 @@ class Uzsakymas(db.Model):
     data = db.Column("Vardas", db.DateTime, default=datetime.today)
     vartotojas_id = db.Column(db.Integer, db.ForeignKey("vartotojas.id"))
     vartotojas = db.relationship("Vartotojas")
+    prekes = db.relationship("Eilute")
 
 
 class Eilute(db.Model):
@@ -47,6 +46,8 @@ class Eilute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     produktas_id = db.Column(db.Integer, db.ForeignKey("produktas.id"))
     produktas = db.relationship("Produktas")
+    uzsakymas_id = db.Column(db.Integer, db.ForeignKey("uzsakymas.id"))
+    uzsakymas = db.relationship("Uzsakymas")
     kiekis = db.Column("Pavadinimas", db.Integer)
 
 @app.route("/")
@@ -76,7 +77,7 @@ def uzsakymai():
         uzsakymai = Uzsakymas.query.all()
     except:
         uzsakymai = []
-    return render_template("produktai.html", uzsakymai=uzsakymai)
+    return render_template("uzsakymai.html", uzsakymai=uzsakymai)
 
 @app.route("/naujas_vartotojas", methods=["GET", "POST"])
 def naujas_vartotojas():
@@ -114,6 +115,18 @@ def naujas_uzsakymas():
         db.session.commit()
         return redirect(url_for('uzsakymai'))
     return render_template("prideti_uzsakyma.html", form=forma)
+
+
+@app.route("/prideti_preke/<int:id>", methods=["GET", "POST"])
+def prideti_preke(id):
+    db.create_all()
+    forma = forms.PrekeForm()
+    if forma.validate_on_submit():
+        eilute = Eilute(produktas_id=forma.produktas.data.id, uzsakymas_id=id, kiekis=forma.kiekis.data)
+        db.session.add(eilute)
+        db.session.commit()
+        return redirect(url_for('uzsakymai'))
+    return render_template("prideti_preke.html", form=forma)
 
 if __name__ == '__main__':
     db.create_all()

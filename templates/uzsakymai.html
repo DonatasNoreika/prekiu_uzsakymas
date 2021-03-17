@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<h3>Užsakymai</h3>
 {% if uzsakymai %}
 {% for uzsakymas in uzsakymai %}
 <hr>
 <p><strong>Data:</strong> {{uzsakymas.data}}</p>
 <p><strong>Vartotojas:</strong> {{uzsakymas.vartotojas.vardas}}</p>
+<br/>
+<h5>Prekės:</h5>
+{% if uzsakymas.prekes %}
+{% for preke in uzsakymas.prekes %}
+<p><strong>Pavadinimas:</strong> {{preke.produktas.pavadinimas}} <strong>Kiekis:</strong> {{preke.kiekis}}</p>
+{% endfor %}
+{% endif %}
+
+<p><a href="{{ url_for('prideti_preke', id=uzsakymas.id)}}">Pridėti prekę</a></p>
 
 {% endfor %}
 {% endif %}
-<p><a href="{{ url_for('nauja_eilute')}}">Nauja eilutė</a></p>
 
 <hr>
 <p><a href="{{ url_for('naujas_uzsakymas')}}">Naujas užsakymas</a></p>

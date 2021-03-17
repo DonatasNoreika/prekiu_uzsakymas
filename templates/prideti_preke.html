@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="post" action="#">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.produktas.label(class="form-control-label") }}
+        {{ form.produktas(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.kiekis.label(class="form-control-label") }}
+        {{ form.kiekis(class="form-control") }}
+    </div>
+    {{ form.submit }}
+</form>
+{% endblock %}

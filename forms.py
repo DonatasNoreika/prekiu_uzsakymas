@@ -27,7 +27,7 @@ class UzsakymasForm(FlaskForm):
     vartotojas = QuerySelectField(query_factory=vartotojas_query, get_label="vardas", get_pk=get_pk)
     submit = SubmitField('Įvesti')
 
-class EiluteForm(FlaskForm):
+class PrekeForm(FlaskForm):
     produktas = QuerySelectField(query_factory=produktas_query, get_label="pavadinimas", get_pk=get_pk)
     kiekis = IntegerField('Kiekis', [DataRequired()])
     submit = SubmitField('Įvesti')
