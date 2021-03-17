@@ -8,15 +8,19 @@
 <p><strong>Data:</strong> {{uzsakymas.data}}</p>
 <p><strong>Vartotojas:</strong> {{uzsakymas.vartotojas.vardas}}</p>
 <br/>
+{% set vars = {'total': 0} %}
 <h5>Prekės:</h5>
 {% if uzsakymas.prekes %}
 {% for preke in uzsakymas.prekes %}
 <p><strong>Pavadinimas:</strong> {{preke.produktas.pavadinimas}} <strong>Prekės kaina:</strong> {{preke.produktas.kaina}} <strong>Kiekis:</strong> {{preke.kiekis}} <strong>Suma:</strong> {{preke.produktas.kaina * preke.kiekis}}</p>
+{% if vars.update({'total': vars.total + (preke.produktas.kaina * preke.kiekis)}) %}{% endif %}
+
 {% endfor %}
 {% endif %}
 
 <p><a href="{{ url_for('prideti_preke', id=uzsakymas.id)}}">Pridėti prekę</a></p>
 
+<p><strong>BENDRA SUMA:</strong> {{vars.total}}</strong></p>
 {% endfor %}
 {% endif %}
 
