@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if vartotojai %}
+{% for vartotojas in vartotojai %}
+<hr>
+<p><strong>Vardas:</strong> {{vartotojas.vardas}}</p>
+<p><strong>Pavardė:</strong> {{vartotojas.pavarde}}</p>
+
+{% endfor %}
+{% endif %}
+<hr>
+<p><a href="{{ url_for('naujas_vartotojas')}}">Naujas vartotojas</a></p>
+
+{% endblock %}

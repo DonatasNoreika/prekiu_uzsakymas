@@ -48,6 +48,30 @@ class Eilute(db.Model):
     produktas = db.relationship("Produktas")
     kiekis = db.Column("Pavadinimas", db.Integer)
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/vartotojai")
+def vartotojai():
+    try:
+        vartotojai = Vartotojas.query.all()
+    except:
+        vartotojai = []
+    return render_template("vartotojai.html", vartotojai=vartotojai)
+
+
+@app.route("/naujas_vartotojas", methods=["GET", "POST"])
+def naujas_vartotojas():
+    db.create_all()
+    forma = forms.VartotojasForm()
+    if forma.validate_on_submit():
+        vartotojas = Vartotojas(vardas=forma.vardas.data,
+                             pavarde=forma.pavarde.data)
+        db.session.add(vartotojas)
+        db.session.commit()
+        return redirect(url_for('vartotojai'))
+    return render_template("prideti_vartotoja.html", form=forma)
 
 if __name__ == '__main__':
     db.create_all()
