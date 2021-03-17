@@ -10,6 +10,9 @@ def get_pk(obj):
 def vartotojas_query():
     return app.Vartotojas.query
 
+def produktas_query():
+    return app.Produktas.query
+
 class VartotojasForm(FlaskForm):
     vardas = StringField('Vardas', [DataRequired()])
     pavarde = StringField('Pavardė', [DataRequired()])
@@ -22,4 +25,9 @@ class ProduktasForm(FlaskForm):
 
 class UzsakymasForm(FlaskForm):
     vartotojas = QuerySelectField(query_factory=vartotojas_query, get_label="vardas", get_pk=get_pk)
+    submit = SubmitField('Įvesti')
+
+class EiluteForm(FlaskForm):
+    produktas = QuerySelectField(query_factory=produktas_query, get_label="pavadinimas", get_pk=get_pk)
+    kiekis = IntegerField('Kiekis', [DataRequired()])
     submit = SubmitField('Įvesti')
