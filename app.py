@@ -60,6 +60,14 @@ def vartotojai():
         vartotojai = []
     return render_template("vartotojai.html", vartotojai=vartotojai)
 
+@app.route("/produktai")
+def produktai():
+    try:
+        produktai = Produktas.query.all()
+    except:
+        produktai = []
+    return render_template("produktai.html", produktai=produktai)
+
 
 @app.route("/naujas_vartotojas", methods=["GET", "POST"])
 def naujas_vartotojas():
@@ -72,6 +80,19 @@ def naujas_vartotojas():
         db.session.commit()
         return redirect(url_for('vartotojai'))
     return render_template("prideti_vartotoja.html", form=forma)
+
+
+@app.route("/naujas_produktas", methods=["GET", "POST"])
+def naujas_produktas():
+    db.create_all()
+    forma = forms.ProduktasForm()
+    if forma.validate_on_submit():
+        produktas = Produktas(pavadinimas=forma.pavadinimas.data,
+                             kaina=forma.kaina.data)
+        db.session.add(produktas)
+        db.session.commit()
+        return redirect(url_for('produktai'))
+    return render_template("prideti_produkta.html", form=forma)
 
 if __name__ == '__main__':
     db.create_all()
