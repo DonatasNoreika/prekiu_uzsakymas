@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import forms
+from datetime import datetime
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 print(basedir)
@@ -36,7 +37,7 @@ class Produktas(db.Model):
 class Uzsakymas(db.Model):
     __tablename__ = "uzsakymas"
     id = db.Column(db.Integer, primary_key=True)
-    data = db.Column("Vardas", db.DateTime)
+    data = db.Column("Vardas", db.DateTime, default=datetime.today)
     vartotojas_id = db.Column(db.Integer, db.ForeignKey("vartotojas.id"))
     vartotojas = db.relationship("Vartotojas")
 
@@ -69,6 +70,14 @@ def produktai():
     return render_template("produktai.html", produktai=produktai)
 
 
+@app.route("/uzsakymai")
+def uzsakymai():
+    try:
+        uzsakymai = Uzsakymas.query.all()
+    except:
+        uzsakymai = []
+    return render_template("produktai.html", uzsakymai=uzsakymai)
+
 @app.route("/naujas_vartotojas", methods=["GET", "POST"])
 def naujas_vartotojas():
     db.create_all()
@@ -93,6 +102,18 @@ def naujas_produktas():
         db.session.commit()
         return redirect(url_for('produktai'))
     return render_template("prideti_produkta.html", form=forma)
+
+
+@app.route("/naujas_uzsakymas", methods=["GET", "POST"])
+def naujas_uzsakymas():
+    db.create_all()
+    forma = forms.UzsakymasForm()
+    if forma.validate_on_submit():
+        uzsakymas = Uzsakymas(vartotojas_id=forma.vartotojas.data.id)
+        db.session.add(uzsakymas)
+        db.session.commit()
+        return redirect(url_for('uzsakymai'))
+    return render_template("prideti_uzsakyma.html", form=forma)
 
 if __name__ == '__main__':
     db.create_all()
