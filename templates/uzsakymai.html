@@ -11,7 +11,7 @@
 <h5>Prekės:</h5>
 {% if uzsakymas.prekes %}
 {% for preke in uzsakymas.prekes %}
-<p><strong>Pavadinimas:</strong> {{preke.produktas.pavadinimas}} <strong>Kiekis:</strong> {{preke.kiekis}}</p>
+<p><strong>Pavadinimas:</strong> {{preke.produktas.pavadinimas}} <strong>Prekės kaina:</strong> {{preke.produktas.kaina}} <strong>Kiekis:</strong> {{preke.kiekis}} <strong>Suma:</strong> {{preke.produktas.kaina * preke.kiekis}}</p>
 {% endfor %}
 {% endif %}
 
